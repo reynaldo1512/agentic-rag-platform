@@ -1,20 +1,27 @@
-from fastapi import APIRouter
- 
+"""Endpoint de chat - conectado al grafo real de Adaptive RAG."""
+from fastapi import APIRouter, HTTPException
 from app.schemas.chat import ChatRequest, ChatResponse
+from app.services.chat_service import ChatService
  
 router = APIRouter(tags=["Chat"])
- 
-PLACEHOLDER_REPLY = (
-    "Soy un agente de demostración. Todavía no tengo lógica de Agentic RAG "
-    "implementada: esta es una respuesta fija de bootstrap."
-)
+_service = ChatService()
  
  
 @router.post(
-    "/chat",
-    response_model=ChatResponse,
-    summary="Envía un mensaje al agente (placeholder)",
+    "/chat", response_model=ChatResponse,
+    summary="Envia un mensaje al agente Adaptive RAG",
 )
 async def send_message(payload: ChatRequest) -> ChatResponse:
-    """Recibe un mensaje y devuelve una respuesta fija (sin IA real todavía)."""
-    return ChatResponse(reply=PLACEHOLDER_REPLY, received_message=payload.message)
+    """
+    Procesa el mensaje del usuario a traves del grafo de LangGraph:
+    routing -> retrieval -> grading -> generation -> evaluation.
+    """
+    try:
+        result = _service.chat(payload.message)
+        return ChatResponse(
+            reply=result["reply"],
+            received_message=payload.message,
+            sources=result["sources"],
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc

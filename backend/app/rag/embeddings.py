@@ -1,14 +1,11 @@
-"""
-Componente de generación de embeddings.
-
-Quedará preparado para integrar, en una iteración futura, el modelo
-de embeddings utilizado para vectorizar documentos y consultas.
-"""
-
-
-class EmbeddingsProvider:
-    """
-    Clase base preparada para futuras implementaciones.
-    """
-
-    pass
+"""Proveedor de embeddings usando OpenAI."""
+from functools import lru_cache
+from langchain_openai import OpenAIEmbeddings
+from app.core.config import get_settings
+ 
+ 
+@lru_cache
+def get_embeddings() -> OpenAIEmbeddings:
+    """Instancia unica de OpenAIEmbeddings (cacheada)."""
+    settings = get_settings()
+    return OpenAIEmbeddings(api_key=settings.openai_api_key)
