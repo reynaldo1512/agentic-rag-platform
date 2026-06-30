@@ -1,0 +1,32 @@
+# --- Entornos y secretos -----------------------------------------------------
+.env
+*.env.local
+!*.env.example
+
+# --- Backend (Python) --------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+backend/.venv/
+
+# --- Frontend (Node) ----------------------------------------------------------
+node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+
+# --- IDE / Editor --------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+
+# --- Sistema operativo ----------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# --- Docker ---------------------------------------------------------------------
+docker-compose.override.yml
